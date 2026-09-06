@@ -1,0 +1,136 @@
+.auth__wrapper {
+  position: absolute;
+  background-color: white;
+  margin: 0 auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 56vw;
+  padding: 48px 32px 24px;
+  border-radius: 16px;
+}
+
+.auth__content {
+  position: relative;
+}
+
+.auth__separator {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.auth__separator::after,
+.auth__separator::before {
+  content: "";
+  display: block;
+  flex-grow: 1;
+  height: 1px;
+  background: #bac8ce;
+}
+
+.auth__separator--text {
+  margin: 0 24px;
+  font-size: 14px;
+  color: #394547;
+  font-weight: 500;
+}
+
+.close-auth__icon {
+  position: absolute;
+  font-size: 28px;
+  top: -32px;
+  right: 0;
+}
+
+.auth__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #032b41;
+  margin-bottom: 24px;
+}
+
+.auth__login {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 60%;
+  height: 40px;
+  border-radius: 8px;
+  color: white;
+}
+
+.auth__login--guest {
+  background-color: #25396b;
+}
+.auth__login--google {
+  background-color: #3367d6;
+}
+
+.auth__login--icon {
+  display: flex;
+  font-size: 24px;
+  position: absolute;
+  left: 5px;
+}
+
+.auth__login--icon--google {
+  background-color: white;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.auth__input--form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth__input {
+  height: 40px;
+  border: 2px solid #bac8ce;
+
+  border-radius: 4px;
+
+  color: #394547;
+  padding: 0 12px;
+}
+
+.auth__links {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+}
+.auth__link {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth__link--forgot-password {
+  text-align: center;
+  color: #116be9;
+  font-weight: 300;
+  font-size: 14px;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 0 auto 16px;
+  cursor: pointer;
+}
+
+.auth__link--no-account {
+  height: 40px;
+  text-align: center;
+  background-color: #f1f6f4;
+  color: #116be9;
+  width: 100%;
+  border-radius: 0 0 4px 4px;
+  font-weight: 300;
+  font-size: 16px;
+}
