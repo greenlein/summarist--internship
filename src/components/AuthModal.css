@@ -76,6 +76,30 @@
   color: white;
 }
 
+.auth__error {
+  color: red;
+  font-size: 11px;
+}
+
+.auth__spinner {
+  position: absolute;
+  right: 44%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  /* opacity: 0; */
+  animation: spin 1000ms linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .auth__login--guest {
   background-color: #25396b;
 }
@@ -122,11 +146,11 @@
   text-align: center;
   align-items: center;
   justify-content: center;
+  color: #116be9;
 }
 
 .auth__link--forgot-password {
   text-align: center;
-  color: #116be9;
   font-weight: 300;
   font-size: 14px;
   width: -moz-fit-content;
@@ -139,7 +163,6 @@
   height: 40px;
   text-align: center;
   background-color: #f1f6f4;
-  color: #116be9;
   width: 100%;
   border-radius: 0 0 4px 4px;
   font-weight: 300;

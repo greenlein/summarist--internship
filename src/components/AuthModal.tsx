@@ -5,6 +5,14 @@ import google from "../../assets/google.png";
 import { useDispatch, useSelector } from "react-redux";
 import { login, signup, forgotPassword, closed } from "../redux/modalSlice";
 import type { RootState } from "../redux/store";
+import { FaSpinner } from "react-icons/fa";
+import { useState, type SubmitEvent } from "react";
+import { useNavigate } from "react-router";
+import { auth } from "../firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 export default function AuthModal() {
   const dispatch = useDispatch();
@@ -32,40 +40,81 @@ export default function AuthModal() {
 }
 
 function LoginModal() {
+  const [loadingGuest, setLoadingGuest] = useState(false);
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const handleSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+    setError("");
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(["Login successful!", userCredential.user]);
+        navigate("/for-you");
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
+  };
 
   return (
     <>
       <h3 className="auth__title">Log in to Summarist</h3>
-      <button className="auth__login auth__login--guest">
-        <figure className="auth__login--icon">
-          <IoPerson />
-        </figure>
-        <span>Login as a guest</span>
+      <button
+        className="auth__login auth__login--guest"
+        onClick={() => setLoadingGuest(true)}
+      >
+        {loadingGuest ? (
+          <FaSpinner className="auth__spinner" />
+        ) : (
+          <>
+            <figure className="auth__login--icon">
+              <IoPerson />
+            </figure>
+            <span>Login as a guest</span>
+          </>
+        )}
       </button>
       <div className="auth__separator">
         <span className="auth__separator--text">or</span>
       </div>
-      <button className="auth__login auth__login--google">
-        <figure className="auth__login--icon auth__login--icon--google">
-          <img src={google} width="24" height="24"></img>
-        </figure>
-        <span>Login with Google</span>
+      <button
+        className="auth__login auth__login--google"
+        onClick={() => setLoadingGoogle(true)}
+      >
+        {loadingGoogle ? (
+          <FaSpinner className="auth__spinner" />
+        ) : (
+          <>
+            <figure className="auth__login--icon auth__login--icon--google">
+              <img src={google} width="24" height="24"></img>
+            </figure>
+            <span>Login with Google</span>
+          </>
+        )}
       </button>
       <div className="auth__separator">
         <span className="auth__separator--text">or</span>
       </div>
-      <form className="auth__input--form">
+      <form className="auth__input--form" onSubmit={handleSubmit}>
         <input
           className="auth__input auth__input--email"
           type="email"
           placeholder="Email Address"
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           className="auth__input auth__input--password"
           type="password"
           placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
         />
+        {error && <span className="auth__error">Invalid email/password.</span>}
         <button className="auth__btn--login btn">Login</button>
       </form>
       <div className="auth__links">
@@ -87,31 +136,72 @@ function LoginModal() {
 }
 
 function SignupModal() {
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(["Signup successful!", userCredential.user]);
+        navigate("/for-you");
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => setLoading(false));
+  };
 
   return (
     <>
       <h3 className="auth__title">Sign up to Summarist</h3>
-      <button className="auth__login auth__login--google">
-        <figure className="auth__login--icon auth__login--icon--google">
-          <img src={google} width="24" height="24"></img>
-        </figure>
-        <span>Sign up with Google</span>
+      <button
+        className="auth__login auth__login--google"
+        onClick={() => setLoadingGoogle(true)}
+      >
+        {loadingGoogle ? (
+          <FaSpinner className="auth__spinner" />
+        ) : (
+          <>
+            <figure className="auth__login--icon auth__login--icon--google">
+              <img src={google} width="24" height="24"></img>
+            </figure>
+            <span>Sign up with Google</span>
+          </>
+        )}
       </button>
       <div className="auth__separator">
         <span className="auth__separator--text">or</span>
       </div>
-      <form className="auth__input--form">
+      <form className="auth__input--form" onSubmit={handleSubmit}>
         <input
           className="auth__input auth__input--email"
+          id="email"
           type="email"
           placeholder="Email Address"
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           className="auth__input auth__input--password"
+          id="password"
           type="password"
           placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
         />
+        {error && (
+          <span className="auth__error">
+            Invalid email/password. Password must have at least 8 characters,
+            <br /> 1 uppercase letter, and 1 special character.
+          </span>
+        )}
         <button className="auth__btn--login btn">Sign up</button>
       </form>
       <div className="auth__links">
