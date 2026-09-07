@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "../index.css";
 import logo from "../../assets/logo.png";
-import { LoginModal } from "./AuthModals";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/modalSlice";
 
 export default function Navbar() {
-  const [showLogin, setshowLogin] = useState(false);
-
-  useEffect(() => {
-    showLogin && console.log("login");
-  }, [showLogin]);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -20,7 +17,9 @@ export default function Navbar() {
           <ul className="nav__list--wrapper">
             <li
               className="nav__list nav__list--login"
-              onClick={() => setshowLogin(true)}
+              onClick={() => {
+                dispatch(login());
+              }}
             >
               Login
             </li>
@@ -30,7 +29,6 @@ export default function Navbar() {
           </ul>
         </div>
       </nav>
-      {showLogin && <LoginModal />}
     </>
   );
 }

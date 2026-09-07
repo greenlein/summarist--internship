@@ -1,8 +1,12 @@
 import React from "react";
 import landing from "../../assets/landing.png";
 import "../index.css";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/modalSlice";
 
 function Landing() {
+  const dispatch = useDispatch();
+
   return (
     <section id="landing">
       <div className="container">
@@ -20,7 +24,12 @@ function Landing() {
                 <br className="remove--tablet" />
                 and even people who don’t like to read.
               </div>
-              <button className="btn home__cta--btn">Login</button>
+              <button
+                className="btn home__cta--btn"
+                onClick={() => dispatch(login())}
+              >
+                Login
+              </button>
             </div>
             <figure className="landing__image--mask">
               <img src={landing} alt="landing" />
