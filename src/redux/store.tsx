@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import modalSlice from "./modalSlice.tsx";
+import authSlice from "./authSlice.tsx";
 
 export const store = configureStore({
   reducer: {
     // Add your feature reducers here
     modal: modalSlice,
+    auth: authSlice,
   },
 });
 

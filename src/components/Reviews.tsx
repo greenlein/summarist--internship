@@ -1,6 +1,10 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/modalSlice";
 
 export default function Reviews() {
+  const dispatch = useDispatch();
+
   return (
     <>
       <section id="reviews">
@@ -11,9 +15,7 @@ export default function Reviews() {
               <div className="review">
                 <div className="review__header">
                   <div className="review__name">Hanna M.</div>
-                  <div className="review__stars">
-                    {/* <BsStarFill /> */}
-                  </div>
+                  <div className="review__stars">{/* <BsStarFill /> */}</div>
                 </div>
                 <div className="review__body">
                   This app has been a <b>game-changer</b> for me! It's saved me so much time and effort in reading and
@@ -23,9 +25,7 @@ export default function Reviews() {
               <div className="review">
                 <div className="review__header">
                   <div className="review__name">David B.</div>
-                  <div className="review__stars">
-                    {/* <BsStarFill /> */}
-                  </div>
+                  <div className="review__stars">{/* <BsStarFill /> */}</div>
                 </div>
                 <div className="review__body">
                   I love this app! It provides
@@ -36,9 +36,7 @@ export default function Reviews() {
               <div className="review">
                 <div className="review__header">
                   <div className="review__name">Nathan S.</div>
-                  <div className="review__stars">
-                    {/* <BsStarFill /> */}
-                  </div>
+                  <div className="review__stars">{/* <BsStarFill /> */}</div>
                 </div>
                 <div className="review__body">
                   This app is a great way to get the main takeaways from a book without having to read the entire thing.
@@ -49,9 +47,7 @@ export default function Reviews() {
               <div className="review">
                 <div className="review__header">
                   <div className="review__name">Ryan R.</div>
-                  <div className="review__stars">
-                    {/* <BsStarFill /> */}
-                  </div>
+                  <div className="review__stars">{/* <BsStarFill /> */}</div>
                 </div>
                 <div className="review__body">
                   If you're a busy person who
@@ -61,7 +57,9 @@ export default function Reviews() {
               </div>
             </div>
             <div className="reviews__btn--wrapper">
-              <button className="btn home__cta--btn">Login</button>
+              <button className="btn home__cta--btn" onClick={() => dispatch(login())}>
+                Login
+              </button>
             </div>
           </div>
         </div>

@@ -9,14 +9,13 @@ import { FaSpinner } from "react-icons/fa";
 import { useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router";
 import { auth } from "../firebase";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { setUser } from "../redux/authSlice";
 
 export default function AuthModal() {
   const dispatch = useDispatch();
   const authModal = useSelector((state: RootState) => state.modal.value);
+  const awaitingUser = useSelector((state: RootState) => state.auth.isLoading);
 
   return (
     <>
@@ -24,10 +23,7 @@ export default function AuthModal() {
         <div className="auth__container">
           <div className="auth__wrapper">
             <div className="auth__content">
-              <IoClose
-                className="close-auth__icon"
-                onClick={() => dispatch(closed())}
-              />
+              <IoClose className="close-auth__icon" onClick={() => dispatch(closed())} />
               {(authModal === "login" && <LoginModal />) ||
                 (authModal === "signup" && <SignupModal />) ||
                 (authModal === "forgotPassword" && <ForgotPasswordModal />)}
@@ -54,7 +50,8 @@ function LoginModal() {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        console.log(["Login successful!", userCredential.user]);
+        dispatch(setUser(email));
+        dispatch(closed());
         navigate("/for-you");
       })
       .catch((err) => {
@@ -62,13 +59,25 @@ function LoginModal() {
       });
   };
 
+  const handleGuestLogin = () => {
+    setLoadingGuest(true);
+    (signInWithEmailAndPassword(auth, "guest@email.com", "Guest123!")
+      .then((userCredential) => {
+        dispatch(setUser("guest@email.com"));
+        dispatch(closed());
+        navigate("/for-you");
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => setLoadingGuest(false)),
+      setLoadingGoogle(false));
+  };
+
   return (
     <>
       <h3 className="auth__title">Log in to Summarist</h3>
-      <button
-        className="auth__login auth__login--guest"
-        onClick={() => setLoadingGuest(true)}
-      >
+      <button className="auth__login auth__login--guest" onClick={() => handleGuestLogin()}>
         {loadingGuest ? (
           <FaSpinner className="auth__spinner" />
         ) : (
@@ -83,10 +92,7 @@ function LoginModal() {
       <div className="auth__separator">
         <span className="auth__separator--text">or</span>
       </div>
-      <button
-        className="auth__login auth__login--google"
-        onClick={() => setLoadingGoogle(true)}
-      >
+      <button className="auth__login auth__login--google" onClick={() => setLoadingGoogle(true)}>
         {loadingGoogle ? (
           <FaSpinner className="auth__spinner" />
         ) : (
@@ -118,16 +124,10 @@ function LoginModal() {
         <button className="auth__btn--login btn">Login</button>
       </form>
       <div className="auth__links">
-        <a
-          className="auth__link auth__link--forgot-password"
-          onClick={() => dispatch(forgotPassword())}
-        >
+        <a className="auth__link auth__link--forgot-password" onClick={() => dispatch(forgotPassword())}>
           Forgot Your Password?
         </a>
-        <a
-          className="auth__link  auth__link--no-account"
-          onClick={() => dispatch(signup())}
-        >
+        <a className="auth__link  auth__link--no-account" onClick={() => dispatch(signup())}>
           Don't have an account?
         </a>
       </div>
@@ -149,24 +149,23 @@ function SignupModal() {
     setError("");
     setLoading(true);
 
-    createUserWithEmailAndPassword(auth, email, password)
+    (createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        console.log(["Signup successful!", userCredential.user]);
+        dispatch(setUser(email));
+        dispatch(closed());
         navigate("/for-you");
       })
       .catch((err) => {
         setError(err.message);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setLoading(false)),
+      setLoadingGoogle(false));
   };
 
   return (
     <>
       <h3 className="auth__title">Sign up to Summarist</h3>
-      <button
-        className="auth__login auth__login--google"
-        onClick={() => setLoadingGoogle(true)}
-      >
+      <button className="auth__login auth__login--google" onClick={() => setLoadingGoogle(true)}>
         {loadingGoogle ? (
           <FaSpinner className="auth__spinner" />
         ) : (
@@ -220,14 +219,8 @@ function ForgotPasswordModal() {
     <>
       <h3 className="auth__title">Reset Your Password</h3>
       <form className="auth__input--form">
-        <input
-          className="auth__input auth__input--email"
-          type="email"
-          placeholder="Email Address"
-        />
-        <button className="auth__btn--login btn">
-          Send reset password link
-        </button>
+        <input className="auth__input auth__input--email" type="email" placeholder="Email Address" />
+        <button className="auth__btn--login btn">Send reset password link</button>
       </form>
       <div className="auth__links">
         <button className="auth__link" onClick={() => dispatch(login())}>
