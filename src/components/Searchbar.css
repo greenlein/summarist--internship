@@ -1,5 +1,6 @@
 .container--searchbar {
   height: 80px;
+  border-bottom: 1px solid #e1e7ea;
 }
 
 .row--searchbar {

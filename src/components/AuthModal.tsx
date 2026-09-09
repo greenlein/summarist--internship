@@ -8,14 +8,14 @@ import type { RootState } from "../redux/store";
 import { FaSpinner } from "react-icons/fa";
 import { useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router";
-import { auth } from "../firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../firebase";
 import { setUser } from "../redux/authSlice";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function AuthModal() {
   const dispatch = useDispatch();
   const authModal = useSelector((state: RootState) => state.modal.value);
-  const awaitingUser = useSelector((state: RootState) => state.auth.isLoading);
 
   return (
     <>
@@ -50,7 +50,8 @@ function LoginModal() {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        dispatch(setUser(email));
+        const { user } = userCredential;
+        dispatch(setUser({ uid: user.uid, email: email }));
         dispatch(closed());
         navigate("/for-you");
       })
@@ -61,17 +62,16 @@ function LoginModal() {
 
   const handleGuestLogin = () => {
     setLoadingGuest(true);
-    (signInWithEmailAndPassword(auth, "guest@email.com", "Guest123!")
-      .then((userCredential) => {
-        dispatch(setUser("guest@email.com"));
+    signInWithEmailAndPassword(auth, "guest@email.com", "Guest123!")
+      .then(() => {
+        dispatch(setUser({ email: "guest@email.com", uid: "19XaycOL3vO5pLofGunuIgYul1i1" }));
         dispatch(closed());
         navigate("/for-you");
       })
       .catch((err) => {
         setError(err.message);
       })
-      .finally(() => setLoadingGuest(false)),
-      setLoadingGoogle(false));
+      .finally(() => setLoadingGuest(false));
   };
 
   return (
@@ -137,29 +137,40 @@ function LoginModal() {
 
 function SignupModal() {
   const [loadingGoogle, setLoadingGoogle] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const createAccount = (email: string, uid: string) => {
+    const userData = {
+      uid: uid,
+      email: email,
+      subscription: "basic",
+      savedBooks: [],
+      finishedBooks: [],
+    };
+    setDoc(doc(db, "users", uid), userData);
+  };
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
 
-    (createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        dispatch(setUser(email));
+        const { user } = userCredential;
+        createAccount(email, user.uid);
+
+        dispatch(setUser({ uid: user.uid, email: email }));
         dispatch(closed());
         navigate("/for-you");
       })
       .catch((err) => {
         setError(err.message);
       })
-      .finally(() => setLoading(false)),
-      setLoadingGoogle(false));
+      .finally(() => setLoadingGoogle(false));
   };
 
   return (

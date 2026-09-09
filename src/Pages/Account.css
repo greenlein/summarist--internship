@@ -10,7 +10,11 @@
   max-width: 1070px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 40px 24px;
+}
+
+.section--wrapper {
+  padding: 16px 0;
 }
 
 .section {
@@ -60,9 +64,6 @@
   min-width: 140px;
 }
 
-.selected__content {
-}
-
 .selected__title {
   font-weight: 600;
   color: #032b41;
@@ -106,6 +107,19 @@
   color: #032b41;
 }
 
+.section__book {
+  max-width: 200px;
+}
+
+.section__books {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  scroll-snap-type: mandatory;
+  scroll-snap-type: x;
+  margin: 24px 0;
+}
+
 .books {
   display: flex;
   width: 100%;
@@ -113,13 +127,14 @@
   gap: 16px;
   scroll-snap-type: x mandatory;
   margin-bottom: 32px;
+  padding-bottom: 12px;
 }
 
 .book--wrapper {
   cursor: pointer;
   position: relative;
   scroll-snap-align: start;
-  padding: 32px 12px 12px;
+  padding: 0px 12px 0px;
   border-radius: 4px;
   max-width: 200px;
   width: 100%;
@@ -181,6 +196,21 @@
   height: 100%;
 }
 
+.book__pill {
+  background-color: #032b41;
+  width: fit-content;
+  height: 18px;
+  padding: 0 8px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #fff;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+}
+
 /* SETTINGS */
 
 .settings--container {
@@ -209,6 +239,10 @@
   margin-bottom: 32px;
   border-bottom: 1px solid #e1e7ea;
   padding-bottom: 24px;
+}
+
+.settings__btn {
+  width: 200px;
 }
 
 /* IF LOGGED OUT */

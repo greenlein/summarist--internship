@@ -3,24 +3,34 @@ import "./Sidebar.css";
 import { FaBookmark, FaPenAlt, FaRegQuestionCircle } from "react-icons/fa";
 import { FaGear, FaHouse, FaMagnifyingGlass } from "react-icons/fa6";
 import { RxExit } from "react-icons/rx";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../redux/authSlice";
 import type { RootState } from "../redux/store";
 import { login } from "../redux/modalSlice";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 export default function Sidebar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const isPlayerPage = location.pathname.startsWith("/player");
   const isLoggedIn = useSelector((state: RootState) => state.auth.email);
 
   const handleLogout = () => {
     dispatch(clearUser());
+    signOut(auth);
   };
 
   return (
     <>
-      <div className="container--sidebar">
+      <div
+        className="container--sidebar"
+        style={{
+          height: isPlayerPage && isLoggedIn ? "calc(100vh - 140px)" : undefined,
+        }}
+      >
         <figure className="logo--wrapper">
           <img src={logo} alt="" className="logo" />
         </figure>

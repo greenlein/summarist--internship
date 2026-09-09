@@ -1,22 +1,16 @@
 import "../pages/Account.css";
 import { useEffect, useState } from "react";
-import RenderBook from "./RenderBook";
+import RenderBook from "../functions/RenderBook";
 import axios from "axios";
 import { FaCirclePlay } from "react-icons/fa6";
-
-interface Book {
-  id: string;
-  imageLink: string;
-  title: string;
-  author: string;
-  subTitle: string;
-  averageRating: string;
-}
+import type { Book } from "../types/book";
+import { useNavigate } from "react-router";
 
 export default function ForYouTab() {
   const [selected, setSelected] = useState<Book[]>([]);
   const [recommended, setRecommended] = useState<Book[]>([]);
   const [suggested, setSuggested] = useState<Book[]>([]);
+  const navigate = useNavigate();
 
   const fetchSelected = async () => {
     const { data } = await axios.get<Book[]>(
@@ -51,7 +45,7 @@ export default function ForYouTab() {
         <h3 className="section__title">Selected just for you</h3>
         {selected.length > 0 && (
           <>
-            <div className="selected--wrapper">
+            <div className="selected--wrapper" onClick={() => navigate(`/book/${selected[0].id}`)}>
               <p className="selected--desc">{selected[0].subTitle}</p>
               <div className="selected--divider"></div>
               <figure className="selected__img--wrapper">
@@ -85,6 +79,7 @@ export default function ForYouTab() {
               author={book.author}
               subTitle={book.subTitle}
               averageRating={book.averageRating}
+              subscriptionRequired={book.subscriptionRequired}
             />
           ))}
         </div>
@@ -103,6 +98,7 @@ export default function ForYouTab() {
               author={book.author}
               subTitle={book.subTitle}
               averageRating={book.averageRating}
+              subscriptionRequired={book.subscriptionRequired}
             />
           ))}
         </div>

@@ -1,5 +1,7 @@
 import { CiClock2, CiStar } from "react-icons/ci";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import type { RootState } from "../redux/store";
 
 interface RenderBookProps {
   id: string;
@@ -8,6 +10,7 @@ interface RenderBookProps {
   author: string;
   subTitle: string;
   averageRating: string;
+  subscriptionRequired: boolean;
 }
 
 export default function RenderBook({
@@ -17,11 +20,14 @@ export default function RenderBook({
   author,
   subTitle: desc,
   averageRating: rating,
+  subscriptionRequired,
 }: RenderBookProps) {
   const navigate = useNavigate();
+  const subscriptionStatus = useSelector((state: RootState) => state.auth.subscription);
 
   return (
     <a className="book--wrapper" onClick={() => navigate(`/book/${id}`)}>
+      {subscriptionStatus === "basic" && subscriptionRequired && <div className="book__pill">Premium</div>}
       <figure className="book__img--wrapper">
         <img src={image} alt="" className="book__img" />
       </figure>

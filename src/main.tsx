@@ -16,6 +16,8 @@ createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/:tab" element={<Account />} />
+          <Route path="/book/:bookId" element={<Account />} />
+          <Route path="/player/:bookId" element={<Account />} />
         </Routes>
       </Router>
     </Provider>
