@@ -1,78 +1,83 @@
 import { useEffect, useState } from "react";
 import RenderBook from "../functions/RenderBook";
 import type { Book } from "../types/book";
-import { getSavedBooks, getFinishedBooks } from "../functions/HandleSavedBooks";
+import { getSavedBooks, getFinishedBooks } from "../functions/HandleFirebaseDb";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
 import axios from "axios";
 import "../pages/Account.css";
+import { SkeletonBook } from "../functions/SkeletonStates";
 
 export default function SavedTab() {
   const userId = useSelector((state: RootState) => state.auth.uid);
+  const [loading, setLoading] = useState(true);
   const [savedBooksData, setSavedBooksData] = useState<Book[]>([]);
   const [finishedBooksData, setFinishedBooksData] = useState<Book[]>([]);
 
-  const fetchBooksData = async (bookIds) => {
-    return await Promise.all(
-      bookIds.map(async (bookId) => {
-        const { data } = await axios.get(`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookId}`);
-
-        return data;
-      }),
-    );
-  };
-
   useEffect(() => {
     if (!userId) return;
+    setLoading(true);
 
-    getSavedBooks(userId).then(async (bookIds) => {
-      const data = await fetchBooksData(bookIds);
-      setSavedBooksData(data);
-    });
+    const fetchBooksData = async (bookIds: string[]): Promise<Book[]> => {
+      return await Promise.all(
+        bookIds.map(async (bookId) => {
+          const { data } = await axios.get(`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookId}`);
 
-    getFinishedBooks(userId).then(async (bookIds) => {
-      const data = await fetchBooksData(bookIds);
-      setFinishedBooksData(data);
-    });
+          return data;
+        }),
+      );
+    };
+
+    Promise.all([getSavedBooks(userId).then(fetchBooksData), getFinishedBooks(userId).then(fetchBooksData)]).then(
+      ([saved, finished]) => {
+        setSavedBooksData(saved);
+        setFinishedBooksData(finished);
+        setLoading(false);
+      },
+    );
   }, [userId]);
 
   return (
     <>
       <div className="section--wrapper">
         <h3 className="section--title">Saved Books</h3>
-        <span className="section--count section__sub-title">2 items</span>
+        <span className="section--count section__sub-title">{savedBooksData.length} items</span>
         <div className="section__books">
-          {savedBooksData.map((book: Book) => (
-            <RenderBook
-              key={book.id}
-              id={book.id}
-              imageLink={book.imageLink}
-              title={book.title}
-              author={book.author}
-              subTitle={book.subTitle}
-              averageRating={book.averageRating}
-              subscriptionRequired={book.subscriptionRequired}
-            />
-          ))}
+          {!loading
+            ? savedBooksData.map((book: Book) => (
+                <RenderBook
+                  id={book.id}
+                  key={book.id}
+                  imageLink={book.imageLink}
+                  title={book.title}
+                  author={book.author}
+                  subTitle={book.subTitle}
+                  averageRating={book.averageRating}
+                  subscriptionRequired={book.subscriptionRequired}
+                />
+              ))
+            : new Array(5).fill(0).map(() => <SkeletonBook />)}
         </div>
       </div>
 
       <div className="section--wrapper">
         <h3 className="section--title">Finished</h3>
-        <span className="section--count section__sub-title">13 items</span>
+        <span className="section--count section__sub-title">{finishedBooksData.length} items</span>
         <div className="section__books">
-          {finishedBooksData.map((book: Book) => (
-            <RenderBook
-              key={book.id}
-              id={book.id}
-              imageLink={book.imageLink}
-              title={book.title}
-              author={book.author}
-              subTitle={book.subTitle}
-              averageRating={book.averageRating}
-              subscriptionRequired={book.subscriptionRequired}
-            />
-          ))}
+          {!loading
+            ? finishedBooksData.map((book: Book) => (
+                <RenderBook
+                  key={book.id}
+                  id={book.id}
+                  imageLink={book.imageLink}
+                  title={book.title}
+                  author={book.author}
+                  subTitle={book.subTitle}
+                  averageRating={book.averageRating}
+                  subscriptionRequired={book.subscriptionRequired}
+                />
+              ))
+            : new Array(5).fill(0).map(() => <SkeletonBook />)}
         </div>
       </div>
     </>

@@ -3,9 +3,11 @@ import type { Book } from "../types/book";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import "./PlayerPage.css";
+import { SkeletonWrapper } from "react-skeletonify";
 
 export default function PlayerPage() {
   const { bookId } = useParams();
+  const [loading, setLoading] = useState(true);
   const [book, setBook] = useState({} as Book);
 
   useEffect(() => {
@@ -13,19 +15,21 @@ export default function PlayerPage() {
       const { data } = await axios.get(`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookId}`);
       setBook(data);
     };
-    fetchBook();
+    fetchBook().then(setLoading(false));
   }, [bookId]);
 
   return (
     <>
-      <div className="summary">
-        <div className="audio__book--summary">
-          <div className="audio__book--summary-title">
-            <b>{book.title}</b>
+      <SkeletonWrapper loading={loading}>
+        <div className="summary">
+          <div className="audio__book--summary">
+            <div className="audio__book--summary-title">
+              <b>{book.title}</b>
+            </div>
+            <div className="audio__book--summary-text">{book.summary}</div>
           </div>
-          <div className="audio__book--summary-text">{book.summary}</div>
         </div>
-      </div>
+      </SkeletonWrapper>
     </>
   );
 }

@@ -10,17 +10,20 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
 import { login } from "../redux/modalSlice";
 import loginImg from "../../assets/login.png";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { clearUser, setUser } from "../redux/authSlice";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import PlayerPage from "../components/PlayerPage";
 import AudioPlayer from "../components/AudioPlayer";
 import ChoosePlanPage from "../components/ChoosePlanPage";
+import { getSubscriptionStatus } from "../functions/HandleFirebaseDb";
 
 export default function Account() {
-  const isLoggedIn = useSelector((state: RootState) => state.auth.email);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dispatch = useDispatch();
+
+  const isUserLoading = useSelector((state: RootState) => state.auth.isLoading);
 
   const { tab } = useParams();
   const { bookId } = useParams();
@@ -32,11 +35,19 @@ export default function Account() {
   useEffect(() => {
     const checkLoggedIn = onAuthStateChanged(auth, (user) => {
       if (user) {
-        dispatch(setUser({ uid: user.uid, email: user.email }));
+        getSubscriptionStatusAndLogIn(user);
+        setIsLoggedIn(true);
       } else {
         dispatch(clearUser());
+        setIsLoggedIn(false);
       }
     });
+
+    const getSubscriptionStatusAndLogIn = async (user) => {
+      const userSubscription = await getSubscriptionStatus(user.uid);
+
+      dispatch(setUser({ uid: user.uid, email: user.email, subscription: userSubscription }));
+    };
 
     return () => checkLoggedIn();
   }, [dispatch]);
@@ -45,6 +56,7 @@ export default function Account() {
     if (!isLoggedIn || !bookId) {
       return null;
     }
+
     if (isPlayerPage) {
       return (
         <>
@@ -53,12 +65,9 @@ export default function Account() {
         </>
       );
     }
-    if (isBookPage) {
-      return <BookDetails />;
-    }
-    if (isPlanPage) {
-      return <ChoosePlanPage />;
-    }
+
+    if (isBookPage) return <BookDetails />;
+    if (isPlanPage) return <ChoosePlanPage />;
   };
 
   return (
@@ -78,7 +87,8 @@ export default function Account() {
 
           {isLoggedIn && bookId
             ? handleCurrentPage()
-            : !isLoggedIn && (
+            : !isLoggedIn &&
+              !isUserLoading && (
                 <>
                   <div className="logged-out--wrapper">
                     <figure className="logged-out__img--wrapper">

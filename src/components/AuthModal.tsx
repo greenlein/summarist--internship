@@ -12,6 +12,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import { auth, db } from "../firebase";
 import { setUser } from "../redux/authSlice";
 import { doc, setDoc } from "firebase/firestore";
+import { getSubscriptionStatus } from "../functions/HandleFirebaseDb";
 
 export default function AuthModal() {
   const dispatch = useDispatch();
@@ -51,7 +52,7 @@ function LoginModal() {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const { user } = userCredential;
-        dispatch(setUser({ uid: user.uid, email: email }));
+        dispatch(setUser({ uid: user.uid, email: user.email }));
         dispatch(closed());
         navigate("/for-you");
       })
@@ -64,7 +65,7 @@ function LoginModal() {
     setLoadingGuest(true);
     signInWithEmailAndPassword(auth, "guest@email.com", "Guest123!")
       .then(() => {
-        dispatch(setUser({ email: "guest@email.com", uid: "19XaycOL3vO5pLofGunuIgYul1i1" }));
+        dispatch(setUser({ email: "guest@email.com", uid: "19XaycOL3vO5pLofGunuIgYul1i1", subscription: "premium" }));
         dispatch(closed());
         navigate("/for-you");
       })

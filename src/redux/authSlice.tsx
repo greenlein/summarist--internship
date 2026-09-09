@@ -12,7 +12,7 @@ const authSlice = createSlice({
     setUser: (state, action) => {
       state.uid = action.payload.uid;
       state.email = action.payload.email;
-      state.subscription = "basic";
+      state.subscription = action.payload.subscription;
       state.isLoading = false;
     },
     clearUser: (state) => {

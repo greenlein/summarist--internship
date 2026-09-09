@@ -3,7 +3,7 @@
   gap: 16px;
 }
 .inner__book {
-  width: 100%;
+  width: 60%;
 }
 .inner-book__title {
   font-size: 32px;
@@ -26,6 +26,11 @@
   margin-bottom: 16px;
   font-weight: 600;
 }
+
+.inner-book--img-wrapper {
+  width: 40%;
+}
+
 .inner-book__img {
   width: 100%;
 }
@@ -103,6 +108,11 @@
   font-size: 18px;
   transition: color 0.2s;
 }
+
+.save-book__btn {
+  display: flex;
+}
+
 .inner-book__bookmark:hover {
   color: #044298;
 }

@@ -5,45 +5,61 @@ import axios from "axios";
 import { FaCirclePlay } from "react-icons/fa6";
 import type { Book } from "../types/book";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import type { RootState } from "../redux/store";
+import { SkeletonBook, SkeletonSelected } from "../functions/SkeletonStates";
 
 export default function ForYouTab() {
+  const userId = useSelector((state: RootState) => state.auth.uid);
   const [selected, setSelected] = useState<Book[]>([]);
   const [recommended, setRecommended] = useState<Book[]>([]);
   const [suggested, setSuggested] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const fetchSelected = async () => {
-    const { data } = await axios.get<Book[]>(
-      `https://us-central1-summaristt.cloudfunctions.net/getBooks?status=selected`,
-    );
-    setSelected(data);
-  };
-
-  const fetchRecommended = async () => {
-    const { data } = await axios.get<Book[]>(
-      `https://us-central1-summaristt.cloudfunctions.net/getBooks?status=recommended`,
-    );
-    setRecommended(data);
-  };
-
-  const fetchSuggested = async () => {
-    const { data } = await axios.get<Book[]>(
-      `https://us-central1-summaristt.cloudfunctions.net/getBooks?status=suggested`,
-    );
-    setSuggested(data);
-  };
-
   useEffect(() => {
-    fetchSelected();
-    fetchRecommended();
-    fetchSuggested();
-  }, []);
+    let cancelled = false;
+    setLoading(true);
+
+    const fetchSelected = async () => {
+      const { data } = await axios.get<Book[]>(
+        `https://us-central1-summaristt.cloudfunctions.net/getBooks?status=selected`,
+      );
+      return data;
+    };
+
+    const fetchRecommended = async () => {
+      const { data } = await axios.get<Book[]>(
+        `https://us-central1-summaristt.cloudfunctions.net/getBooks?status=recommended`,
+      );
+      return data;
+    };
+
+    const fetchSuggested = async () => {
+      const { data } = await axios.get<Book[]>(
+        `https://us-central1-summaristt.cloudfunctions.net/getBooks?status=suggested`,
+      );
+      return data;
+    };
+
+    Promise.all([fetchSelected(), fetchRecommended(), fetchSuggested()]).then(([selected, recommended, suggested]) => {
+      if (cancelled) return;
+      setSelected(selected);
+      setRecommended(recommended);
+      setSuggested(suggested);
+      setLoading(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
 
   return (
     <>
       <div className="section">
         <h3 className="section__title">Selected just for you</h3>
-        {selected.length > 0 && (
+        {selected.length > 0 ? (
           <>
             <div className="selected--wrapper" onClick={() => navigate(`/book/${selected[0].id}`)}>
               <p className="selected--desc">{selected[0].subTitle}</p>
@@ -63,6 +79,8 @@ export default function ForYouTab() {
               </div>
             </div>
           </>
+        ) : (
+          <SkeletonSelected />
         )}
       </div>
 
@@ -70,18 +88,20 @@ export default function ForYouTab() {
         <h3 className="section__title">Recommended For You</h3>
         <span className="section__sub-title">We think you'll like these</span>
         <div className="books">
-          {recommended.map((book: Book) => (
-            <RenderBook
-              id={book.id}
-              key={book.id}
-              imageLink={book.imageLink}
-              title={book.title}
-              author={book.author}
-              subTitle={book.subTitle}
-              averageRating={book.averageRating}
-              subscriptionRequired={book.subscriptionRequired}
-            />
-          ))}
+          {!loading
+            ? recommended.map((book: Book) => (
+                <RenderBook
+                  id={book.id}
+                  key={book.id}
+                  imageLink={book.imageLink}
+                  title={book.title}
+                  author={book.author}
+                  subTitle={book.subTitle}
+                  averageRating={book.averageRating}
+                  subscriptionRequired={book.subscriptionRequired}
+                />
+              ))
+            : new Array(5).fill(0).map(() => <SkeletonBook />)}
         </div>
       </div>
 
@@ -89,18 +109,20 @@ export default function ForYouTab() {
         <h3 className="section__title">Suggested Books</h3>
         <span className="section__sub-title">Browse these books</span>
         <div className="books">
-          {suggested.map((book: Book) => (
-            <RenderBook
-              id={book.id}
-              key={book.id}
-              imageLink={book.imageLink}
-              title={book.title}
-              author={book.author}
-              subTitle={book.subTitle}
-              averageRating={book.averageRating}
-              subscriptionRequired={book.subscriptionRequired}
-            />
-          ))}
+          {!loading
+            ? suggested.map((book: Book) => (
+                <RenderBook
+                  id={book.id}
+                  key={book.id}
+                  imageLink={book.imageLink}
+                  title={book.title}
+                  author={book.author}
+                  subTitle={book.subTitle}
+                  averageRating={book.averageRating}
+                  subscriptionRequired={book.subscriptionRequired}
+                />
+              ))
+            : new Array(5).fill(0).map(() => <SkeletonBook />)}
         </div>
       </div>
     </>

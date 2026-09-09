@@ -3,6 +3,7 @@ import type { Book } from "../types/book";
 import { useParams } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { SkeletonWrapper } from "react-skeletonify";
 
 export default function AudioPlayer() {
   const { bookId } = useParams();
@@ -11,6 +12,7 @@ export default function AudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   //Add green indicator of tiume elapsed within slider
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
@@ -80,7 +82,8 @@ export default function AudioPlayer() {
       const { data } = await axios.get(`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookId}`);
       setBook(data);
     };
-    fetchBook();
+
+    fetchBook().then(setLoading(false));
   }, [bookId]);
 
   return (
@@ -88,18 +91,20 @@ export default function AudioPlayer() {
       <div className="audio__wrapper">
         <audio src={book.audioLink} ref={audioRef}></audio>
 
-        <div className="audio__track--wrapper">
-          <figure className="audio__track--image-mask">
-            <figure className="book__image--wrapper">
-              <img className="book__image" src={book.imageLink} alt="book"></img>
+        <SkeletonWrapper loading={loading}>
+          <div className="audio__track--wrapper">
+            <figure className="audio__track--image-mask">
+              <figure className="book__image--wrapper">
+                <img className="book__image" src={book.imageLink} alt="book"></img>
+              </figure>
             </figure>
-          </figure>
 
-          <div className="audio__track--details-wrapper">
-            <div className="audio__track--title">{book.title}</div>
-            <div className="audio__track--author">{book.author}</div>
+            <div className="audio__track--details-wrapper">
+              <div className="audio__track--title">{book.title}</div>
+              <div className="audio__track--author">{book.author}</div>
+            </div>
           </div>
-        </div>
+        </SkeletonWrapper>
 
         <div className="audio__controls--wrapper">
           <div className="audio__controls">

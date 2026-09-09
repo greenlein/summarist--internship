@@ -19,8 +19,10 @@ export default function Settings() {
               Upgrade to Premium
             </button>
           </>
-        ) : (
+        ) : user.subscription === "premium" ? (
           <p className="section__para">Premium</p>
+        ) : (
+          "Unable to Load Subscription"
         )}
       </div>
 
