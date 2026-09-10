@@ -137,8 +137,8 @@ export default function BookDetails() {
                     book.subscriptionRequired && !isUserPremium
                       ? () => navigate("/choose-plan")
                       : () => {
-                          removeSavedBook(userId, bookId);
-                          setAddedToLibrary(false);
+                          addSavedBook(userId, bookId);
+                          setAddedToLibrary(true);
                         }
                   }
                 >

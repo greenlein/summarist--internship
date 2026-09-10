@@ -16,7 +16,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import PlayerPage from "../components/PlayerPage";
 import AudioPlayer from "../components/AudioPlayer";
-import ChoosePlanPage from "../components/ChoosePlanPage";
 import { getSubscriptionStatus } from "../functions/HandleFirebaseDb";
 
 export default function Account() {
@@ -30,7 +29,6 @@ export default function Account() {
   const location = useLocation();
   const isPlayerPage = location.pathname.startsWith("/player");
   const isBookPage = location.pathname.startsWith("/book");
-  const isPlanPage = location.pathname.startsWith("/choose-plan");
 
   useEffect(() => {
     const checkLoggedIn = onAuthStateChanged(auth, (user) => {
@@ -67,7 +65,6 @@ export default function Account() {
     }
 
     if (isBookPage) return <BookDetails />;
-    if (isPlanPage) return <ChoosePlanPage />;
   };
 
   return (

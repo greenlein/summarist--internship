@@ -9,6 +9,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router";
 import Account from "./pages/Account.tsx";
 import "react-skeletonify/dist/index.css";
 import { SkeletonProvider } from "react-skeletonify";
+import ChoosePlanPage from "./pages/ChoosePlanPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -28,6 +29,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/:tab" element={<Account />} />
             <Route path="/book/:bookId" element={<Account />} />
             <Route path="/player/:bookId" element={<Account />} />
+            <Route path="/choose-plan" element={<ChoosePlanPage />} />
           </Routes>
         </Router>
       </SkeletonProvider>

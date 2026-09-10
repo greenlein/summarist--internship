@@ -48,13 +48,13 @@ export default function Sidebar() {
               </figure>
               <span className="sidebar__link--text">My Library</span>
             </li>
-            <li className="sidebar__link">
+            <li className="sidebar__link disabled">
               <figure className="sidebar__link--icon--wrapper">
                 <FaPenAlt className="sidebar__link--icon" />
               </figure>
               <span className="sidebar__link--text">Highlights</span>
             </li>
-            <li className="sidebar__link ">
+            <li className="sidebar__link disabled">
               <figure className="sidebar__link--icon--wrapper">
                 <FaMagnifyingGlass className="sidebar__link--icon" />
               </figure>
@@ -68,7 +68,7 @@ export default function Sidebar() {
               </figure>
               <span className="sidebar__link--text">Settings</span>
             </li>
-            <li className="sidebar__link ">
+            <li className="sidebar__link disabled">
               <figure className="sidebar__link--icon--wrapper">
                 <FaRegQuestionCircle className="sidebar__link--icon" />
               </figure>
