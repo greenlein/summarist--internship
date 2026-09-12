@@ -12,11 +12,11 @@ import { login } from "../redux/modalSlice";
 import loginImg from "../../assets/login.png";
 import { useEffect, useState } from "react";
 import { clearUser, setUser } from "../redux/authSlice";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import app, { auth } from "../firebase";
 import PlayerPage from "../components/PlayerPage";
 import AudioPlayer from "../components/AudioPlayer";
-import { getSubscriptionStatus } from "../functions/HandleFirebaseDb";
+import { getPremiumStatus } from "../stripe/getPremiumStatus";
 
 export default function Account() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,9 +31,21 @@ export default function Account() {
   const isBookPage = location.pathname.startsWith("/book");
 
   useEffect(() => {
-    const checkLoggedIn = onAuthStateChanged(auth, (user) => {
+    const preload = new Image();
+    preload.src = loginImg;
+  }, []);
+
+  useEffect(() => {
+    const checkLoggedIn = onAuthStateChanged(auth, async (user: User | null) => {
       if (user) {
-        getSubscriptionStatusAndLogIn(user);
+        const isPremium = await getPremiumStatus(app);
+        dispatch(
+          setUser({
+            uid: user.uid,
+            email: user.email,
+            subscription: isPremium ? "premium" : "basic",
+          }),
+        );
         setIsLoggedIn(true);
       } else {
         dispatch(clearUser());
@@ -41,14 +53,10 @@ export default function Account() {
       }
     });
 
-    const getSubscriptionStatusAndLogIn = async (user) => {
-      const userSubscription = await getSubscriptionStatus(user.uid);
-
-      dispatch(setUser({ uid: user.uid, email: user.email, subscription: userSubscription }));
-    };
-
     return () => checkLoggedIn();
   }, [dispatch]);
+
+  useEffect(() => {}, [dispatch]);
 
   const handleCurrentPage = () => {
     if (!isLoggedIn || !bookId) {

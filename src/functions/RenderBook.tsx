@@ -29,7 +29,9 @@ export default function RenderBook({
   return (
     <a className="book--wrapper" onClick={() => navigate(`/book/${id}`)}>
       {subscriptionStatus === "basic" && subscriptionRequired && (
-        <SkeletonIgnore>{subscriptionStatus !== "premium" && <div className="book__pill">Premium</div>}</SkeletonIgnore>
+        <SkeletonIgnore>
+          <div className="book__pill">Premium</div>
+        </SkeletonIgnore>
       )}
       <figure className="book__img--wrapper">
         <img src={image} alt="" className="book__img" />

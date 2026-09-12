@@ -12,10 +12,18 @@ export default function PlayerPage() {
 
   useEffect(() => {
     const fetchBook = async () => {
-      const { data } = await axios.get(`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookId}`);
-      setBook(data);
+      setLoading(true);
+      try {
+        const { data } = await axios.get<Book>(
+          `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookId}`,
+        );
+        setBook(data);
+      } finally {
+        setLoading(false);
+      }
     };
-    fetchBook().then(setLoading(false));
+
+    fetchBook();
   }, [bookId]);
 
   return (

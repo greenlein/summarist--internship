@@ -169,6 +169,12 @@
   align-items: center;
   gap: 16px;
 }
+
+.plan__spinner {
+  font-size: 24px;
+  animation: spin 1000ms linear infinite;
+}
+
 .plan__disclaimer {
   font-size: 12px;
   color: #6b757b;

@@ -1,4 +1,4 @@
-import { SkeletonIgnore, SkeletonWrapper } from "react-skeletonify";
+import { SkeletonWrapper } from "react-skeletonify";
 
 export const SkeletonBook = () => {
   return (
@@ -43,6 +43,29 @@ export const SkeletonSelected = () => {
             </div>
           </div>
         </div>
+      </SkeletonWrapper>
+    </>
+  );
+};
+
+export const SkeletonSearch = () => {
+  return (
+    <>
+      <SkeletonWrapper loading={true}>
+        <a className="result--wrapper">
+          <figure className="result__img--wrapper">
+            <img alt="" className="result__img" />
+          </figure>
+          <div className="result__content">
+            <div className="result__title">placeholder</div>
+            <div className="result__author" style={{ width: "120px" }}>
+              placeholder
+            </div>
+            <div className="result__duration--wrapper">
+              <div className="result__duration">placeholder</div>
+            </div>
+          </div>
+        </a>
       </SkeletonWrapper>
     </>
   );

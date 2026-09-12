@@ -1,4 +1,3 @@
-import React from "react";
 import landing from "../../assets/landing.png";
 import "../index.css";
 import { useDispatch } from "react-redux";

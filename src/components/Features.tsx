@@ -4,10 +4,7 @@ export default function Features() {
   const [highlight, setHighlight] = useState(1);
 
   useEffect(() => {
-    const interval = setInterval(
-      () => setHighlight((prev) => (prev === 6 ? 1 : prev + 1)),
-      1000,
-    );
+    const interval = setInterval(() => setHighlight((prev) => (prev === 6 ? 1 : prev + 1)), 2000);
     return () => clearInterval(interval);
   }, []);
 
@@ -33,9 +30,7 @@ export default function Features() {
               </div>
 
               <div className="features__title">Read or listen</div>
-              <div className="features__sub--title">
-                Save time by getting the core ideas from the best books.
-              </div>
+              <div className="features__sub--title">Save time by getting the core ideas from the best books.</div>
             </div>
             <div className="features">
               <div className="features__icon">
@@ -52,9 +47,7 @@ export default function Features() {
                 </svg>
               </div>
               <div className="features__title">Find your next read</div>
-              <div className="features__sub--title">
-                Explore book lists and personalized recommendations.
-              </div>
+              <div className="features__sub--title">Explore book lists and personalized recommendations.</div>
             </div>
             <div className="features">
               <div className="features__icon">
@@ -71,41 +64,27 @@ export default function Features() {
                 </svg>
               </div>
               <div className="features__title">Briefcasts</div>
-              <div className="features__sub--title">
-                Gain valuable insights from briefcasts
-              </div>
+              <div className="features__sub--title">Gain valuable insights from briefcasts</div>
             </div>
           </div>
           <div className="statistics__wrapper">
             <div className="statistics__content--header">
-              <div
-                className={`statistics__heading ${highlight === 1 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 1 && "statistics__heading--active"}`}>
                 Enhance your knowledge
               </div>
-              <div
-                className={`statistics__heading ${highlight === 2 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 2 && "statistics__heading--active"}`}>
                 Achieve greater success
               </div>
-              <div
-                className={`statistics__heading ${highlight === 3 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 3 && "statistics__heading--active"}`}>
                 Improve your health
               </div>
-              <div
-                className={`statistics__heading ${highlight === 4 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 4 && "statistics__heading--active"}`}>
                 Develop better parenting skills
               </div>
-              <div
-                className={`statistics__heading ${highlight === 5 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 5 && "statistics__heading--active"}`}>
                 Increase happiness
               </div>
-              <div
-                className={`statistics__heading ${highlight === 6 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 6 && "statistics__heading--active"}`}>
                 Be the best version of yourself!
               </div>
             </div>
@@ -113,8 +92,7 @@ export default function Features() {
               <div className="statistics__data">
                 <div className="statistics__data--number">93%</div>
                 <div className="statistics__data--title">
-                  of Summarist members <b>significantly increase</b> reading
-                  frequency.
+                  of Summarist members <b>significantly increase</b> reading frequency.
                 </div>
               </div>
               <div className="statistics__data">
@@ -136,54 +114,42 @@ export default function Features() {
               <div className="statistics__data">
                 <div className="statistics__data--number">91%</div>
                 <div className="statistics__data--title">
-                  of Summarist members <b>report feeling more productive</b>{" "}
-                  after incorporating the service into their daily routine.
+                  of Summarist members <b>report feeling more productive</b> after incorporating the service into their
+                  daily routine.
                 </div>
               </div>
               <div className="statistics__data">
                 <div className="statistics__data--number">94%</div>
                 <div className="statistics__data--title">
-                  of Summarist members have <b>noticed an improvement</b> in
-                  their overall comprehension and retention of information.
+                  of Summarist members have <b>noticed an improvement</b> in their overall comprehension and retention
+                  of information.
                 </div>
               </div>
               <div className="statistics__data">
                 <div className="statistics__data--number">88%</div>
                 <div className="statistics__data--title">
-                  of Summarist members <b>feel more informed</b> about current
-                  events and industry trends since using the platform.
+                  of Summarist members <b>feel more informed</b> about current events and industry trends since using
+                  the platform.
                 </div>
               </div>
             </div>
             <div className="statistics__content--header statistics__content--header-second">
-              <div
-                className={`statistics__heading ${highlight === 1 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 1 && "statistics__heading--active"}`}>
                 Expand your learning
               </div>
-              <div
-                className={`statistics__heading ${highlight === 2 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 2 && "statistics__heading--active"}`}>
                 Accomplish your goals
               </div>
-              <div
-                className={`statistics__heading ${highlight === 3 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 3 && "statistics__heading--active"}`}>
                 Strengthen your vitality
               </div>
-              <div
-                className={`statistics__heading ${highlight === 4 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 4 && "statistics__heading--active"}`}>
                 Become a better caregiver
               </div>
-              <div
-                className={`statistics__heading ${highlight === 5 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 5 && "statistics__heading--active"}`}>
                 Improve your mood
               </div>
-              <div
-                className={`statistics__heading ${highlight === 6 && "statistics__heading--active"}`}
-              >
+              <div className={`statistics__heading ${highlight === 6 && "statistics__heading--active"}`}>
                 Maximize your abilities
               </div>
             </div>

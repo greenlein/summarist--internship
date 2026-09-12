@@ -4,6 +4,9 @@ import { useParams } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { SkeletonWrapper } from "react-skeletonify";
+import { addFinishedBook } from "../functions/HandleFirebaseDb";
+import { useSelector } from "react-redux";
+import type { RootState } from "../redux/store";
 
 export default function AudioPlayer() {
   const { bookId } = useParams();
@@ -13,6 +16,7 @@ export default function AudioPlayer() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [loading, setLoading] = useState(true);
+  const userId = useSelector((state: RootState) => state.auth.uid);
 
   //Add green indicator of tiume elapsed within slider
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
@@ -44,6 +48,11 @@ export default function AudioPlayer() {
     const seconds = `${Math.floor(time % 60)}`.padStart(2, "0");
     const minutes = `${Math.floor(time / 60)}`.padStart(2, "0");
     return `${minutes}:${seconds}`;
+  };
+
+  const handleAudioEnded = (event: React.SyntheticEvent<HTMLAudioElement>) => {
+    if (!bookId) return;
+    event.type === "ended" && addFinishedBook(userId, bookId);
   };
 
   // Update currentTime as audio plays
@@ -79,17 +88,24 @@ export default function AudioPlayer() {
 
   useEffect(() => {
     const fetchBook = async () => {
-      const { data } = await axios.get(`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookId}`);
-      setBook(data);
+      setLoading(true);
+      try {
+        const { data } = await axios.get<Book>(
+          `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookId}`,
+        );
+        setBook(data);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchBook().then(setLoading(false));
+    fetchBook();
   }, [bookId]);
 
   return (
     <>
       <div className="audio__wrapper">
-        <audio src={book.audioLink} ref={audioRef}></audio>
+        <audio src={book.audioLink} ref={audioRef} onEnded={handleAudioEnded}></audio>
 
         <SkeletonWrapper loading={loading}>
           <div className="audio__track--wrapper">

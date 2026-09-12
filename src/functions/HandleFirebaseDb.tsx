@@ -1,7 +1,9 @@
 import { db } from "../firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 
 export const getSavedBooks = async (userId: string) => {
+  if (!userId) return;
+
   const docRef = doc(db, "users", userId);
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
@@ -11,6 +13,8 @@ export const getSavedBooks = async (userId: string) => {
 };
 
 export const getFinishedBooks = async (userId: string) => {
+  if (!userId) return;
+
   const docRef = doc(db, "users", userId);
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
@@ -19,29 +23,23 @@ export const getFinishedBooks = async (userId: string) => {
   return [];
 };
 
-export const getSubscriptionStatus = async (userId: string) => {
+export const addSavedBook = async (userId: string, bookId: string | undefined) => {
+  if (!bookId || !userId) return;
+
   const docRef = doc(db, "users", userId);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    return docSnap.data().subscription;
-  }
-  return [];
+  await updateDoc(docRef, { savedBooks: arrayUnion(bookId) });
 };
 
-export const addSavedBook = async (userId: string, bookId: string) => {
+export const addFinishedBook = async (userId: string, bookId: string) => {
+  if (!bookId || !userId) return;
+
   const docRef = doc(db, "users", userId);
-  const currentSavedBooks = await getSavedBooks(userId);
-
-  const newSavedList = [...currentSavedBooks, bookId];
-
-  await updateDoc(docRef, { savedBooks: newSavedList });
+  await updateDoc(docRef, { finishedBooks: arrayUnion(bookId) });
 };
 
-export const removeSavedBook = async (userId: string, bookId: string) => {
+export const removeSavedBook = async (userId: string, bookId: string | undefined) => {
+  if (!bookId || !userId) return;
+
   const docRef = doc(db, "users", userId);
-  const currentSavedBooks = await getSavedBooks(userId);
-
-  const updatedList = currentSavedBooks.filter((book) => book !== bookId);
-
-  await updateDoc(docRef, { savedBooks: updatedList });
+  await updateDoc(docRef, { savedBooks: arrayRemove(bookId) });
 };

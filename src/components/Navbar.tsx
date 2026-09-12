@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import "../index.css";
 import logo from "../../assets/logo.png";
 import { useDispatch } from "react-redux";

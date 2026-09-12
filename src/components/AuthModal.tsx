@@ -6,20 +6,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, signup, forgotPassword, closed } from "../redux/modalSlice";
 import type { RootState } from "../redux/store";
 import { FaSpinner } from "react-icons/fa";
-import { useState, type SubmitEvent } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { useNavigate } from "react-router";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { setUser } from "../redux/authSlice";
 import { doc, setDoc } from "firebase/firestore";
-import { getSubscriptionStatus } from "../functions/HandleFirebaseDb";
 
 export default function AuthModal() {
   const dispatch = useDispatch();
   const authModal = useSelector((state: RootState) => state.modal.value);
 
+  useEffect(() => {
+    const preload = new Image();
+    preload.src = google;
+  }, []);
+
   return (
-    <>
+    <div>
       {authModal !== "closed" && (
         <div className="auth__container">
           <div className="auth__wrapper">
@@ -32,7 +36,7 @@ export default function AuthModal() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
@@ -65,7 +69,7 @@ function LoginModal() {
     setLoadingGuest(true);
     signInWithEmailAndPassword(auth, "guest@email.com", "Guest123!")
       .then(() => {
-        dispatch(setUser({ email: "guest@email.com", uid: "19XaycOL3vO5pLofGunuIgYul1i1", subscription: "premium" }));
+        dispatch(setUser({ email: "guest@email.com", uid: "OEgGLry3ODZHRSgETQIcxLGtVkD2", subscription: "premium" }));
         dispatch(closed());
         navigate("/for-you");
       })
@@ -148,7 +152,6 @@ function SignupModal() {
     const userData = {
       uid: uid,
       email: email,
-      subscription: "basic",
       savedBooks: [],
       finishedBooks: [],
     };

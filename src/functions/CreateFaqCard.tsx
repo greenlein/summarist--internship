@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
-export const CreateFaqCard = ({ title, body }) => {
+interface CreateFaqCardProps {
+  title: string;
+  body: string;
+}
+
+export const CreateFaqCard = ({ title, body }: CreateFaqCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -9,9 +14,7 @@ export const CreateFaqCard = ({ title, body }) => {
       <div className="accordion__header" onClick={() => setIsOpen(!isOpen)}>
         <div className="accordion__title">{title}</div>
         {isOpen ? (
-          <>
-            <BsChevronUp style={{ width: "24px", height: "24px" }} />
-          </>
+          <BsChevronUp style={{ width: "24px", height: "24px" }} />
         ) : (
           <BsChevronDown style={{ width: "24px", height: "24px" }} />
         )}

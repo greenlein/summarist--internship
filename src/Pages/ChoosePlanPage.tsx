@@ -3,12 +3,42 @@ import "./ChoosePlanPage.css";
 import pricingTop from "../../assets/pricing-top.png";
 import { IoDocumentTextSharp } from "react-icons/io5";
 import { RiPlantFill } from "react-icons/ri";
-import { FaHandshake } from "react-icons/fa";
+import { FaHandshake, FaSpinner } from "react-icons/fa";
 import { CreateFaqCard } from "../functions/CreateFaqCard";
 import { useState } from "react";
+import { getCheckoutUrl } from "../stripe/stripePayments";
+import app from "../firebase";
+
+const PRICE_IDS: any = {
+  monthly: "price_1UEhGh4YAkniBq7693lhUdfp",
+  yearly: "price_1UEbdr4YAkniBq76DfEGVaw1",
+};
 
 export default function ChoosePlanPage() {
+  const [loadingCheckout, setLoadingCheckout] = useState(false);
   const [chosenPlan, setChosenPlan] = useState("");
+  const [error, setError] = useState(false);
+
+  const upgradeToPremium = async () => {
+    if (!chosenPlan) {
+      setError(true);
+      return;
+    }
+
+    setLoadingCheckout(true);
+    setError(false);
+    const priceId = chosenPlan;
+
+    try {
+      const checkoutUrl = await getCheckoutUrl(app, priceId);
+      window.location.assign(checkoutUrl);
+    } catch (err) {
+      console.error(err);
+      setError(true);
+    } finally {
+      setLoadingCheckout(false);
+    }
+  };
 
   return (
     <div>
@@ -60,11 +90,11 @@ export default function ChoosePlanPage() {
           <div className="section__title">Choose the plan that fits you</div>
 
           <div
-            className={`plan__card ${chosenPlan === "yearly" && "plan__card--active"}`}
-            onClick={() => setChosenPlan("yearly")}
+            className={`plan__card ${chosenPlan === PRICE_IDS.yearly && "plan__card--active"}`}
+            onClick={() => setChosenPlan(PRICE_IDS.yearly)}
           >
             <div className="plan__card--circle">
-              {chosenPlan === "yearly" && <div className="plan__card--dot"></div>}
+              {chosenPlan === PRICE_IDS.yearly && <div className="plan__card--dot"></div>}
             </div>
             <div className="plan__card--content">
               <div className="plan__card--title">Premium Plus Yearly</div>
@@ -78,11 +108,11 @@ export default function ChoosePlanPage() {
           </div>
 
           <div
-            className={`plan__card ${chosenPlan === "monthly" && "plan__card--active"}`}
-            onClick={() => setChosenPlan("monthly")}
+            className={`plan__card ${chosenPlan === PRICE_IDS.monthly && "plan__card--active"}`}
+            onClick={() => setChosenPlan(PRICE_IDS.monthly)}
           >
             <div className="plan__card--circle">
-              {chosenPlan === "monthly" && <div className="plan__card--dot"></div>}
+              {chosenPlan === PRICE_IDS.monthly && <div className="plan__card--dot"></div>}
             </div>
             <div className="plan__card--content">
               <div className="plan__card--title">Premium Monthly</div>
@@ -92,13 +122,14 @@ export default function ChoosePlanPage() {
           </div>
 
           <div className="plan__card--cta">
+            {error && <div>Please choose a plan to proceed.</div>}
             <span className="btn--wrapper">
-              <button className="btn" style={{ width: "300px" }}>
-                <span>Start your free 7-day trial</span>
+              <button className="btn plan__card--btn" style={{ width: "300px" }} onClick={() => upgradeToPremium()}>
+                {loadingCheckout ? <FaSpinner className="plan__spinner" /> : <span>Start your free 7-day trial</span>}
               </button>
             </span>
             <div className="plan__disclaimer">
-              Cancel your trial at any time before it ends, and you won’t be charged.
+              Cancel your trial at any time before it ends, and you won't be charged.
             </div>
           </div>
 

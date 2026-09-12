@@ -39,6 +39,9 @@ export default function BookDetails() {
 
   // Check if book was added to library
   useEffect(() => {
+    if (!bookId) {
+      return;
+    }
     setAddedToLibrary(savedBooks.includes(bookId));
   }, [savedBooks, bookId]);
 
