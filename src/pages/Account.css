@@ -41,10 +41,11 @@
   display: flex;
   justify-content: space-between;
   width: calc((100% / 3) * 2);
+  min-width: 450px;
   background-color: #fbefd6;
   border-radius: 4px;
   padding: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   gap: 24px;
 }
 
@@ -126,7 +127,7 @@
   overflow-x: auto;
   gap: 16px;
   scroll-snap-type: x mandatory;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
   padding-bottom: 12px;
 }
 
@@ -272,4 +273,36 @@
 .logged-out__btn--wrapper {
   width: 200px;
   margin: 0 auto;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .section {
+    align-items: center;
+  }
+
+  .selected__play--wrapper {
+    height: 32px;
+    width: 32px;
+  }
+
+  .selected__duration {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .selected--desc,
+  .selected--divider {
+    display: none;
+  }
+
+  .selected--wrapper {
+    min-width: 360px;
+  }
+
+  .selected__content {
+    width: 60%;
+  }
 }

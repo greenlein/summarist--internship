@@ -25,8 +25,8 @@ export default function AuthModal() {
   return (
     <div>
       {authModal !== "closed" && (
-        <div className="auth__container">
-          <div className="auth__wrapper">
+        <div className="auth__container" onClick={() => dispatch(closed())}>
+          <div className="auth__wrapper" onClick={(e) => e.stopPropagation()}>
             <div className="auth__content">
               <IoClose className="close-auth__icon" onClick={() => dispatch(closed())} />
               {(authModal === "login" && <LoginModal />) ||

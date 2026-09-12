@@ -6,6 +6,7 @@ import { AiOutlineStar } from "react-icons/ai";
 import { useNavigate } from "react-router";
 import { SkeletonSearch } from "../functions/SkeletonStates";
 import type { Book } from "../types/book";
+import { MobileMenu } from "./Sidebar";
 
 export default function Searchbar() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -46,13 +47,10 @@ export default function Searchbar() {
             <FaMagnifyingGlass />
           </i>
         </form>
+        <MobileMenu />
 
         {(loading || books.length > 0) && (
-          <div
-            className="modal__backdrop"
-            onClick={() => setBooks([])}
-
-          >
+          <div className="modal__backdrop" onClick={() => setBooks([])}>
             <div className="search__modal--container">
               {loading && new Array(5).fill(0).map((_, i) => <SkeletonSearch key={i} />)}
 

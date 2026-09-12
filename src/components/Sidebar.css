@@ -59,3 +59,51 @@
 .logo {
   width: 160px;
 }
+
+/* MOBILE */
+
+.mobile__menu--container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #3a46499d;
+  transition: opacity 0.4s ease 0s;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.mobile__icon--container {
+}
+
+.mobile__icon {
+  margin-left: 24px;
+  display: none;
+  width: 40px;
+  height: 40px;
+}
+
+.mobile__links {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .container--account {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .mobile__icon {
+    display: block;
+  }
+
+  .container--sidebar {
+    display: none;
+  }
+
+  .mobile-menu--active {
+    display: block;
+  }
+}

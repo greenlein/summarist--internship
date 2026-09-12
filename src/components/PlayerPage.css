@@ -110,3 +110,11 @@
   color: #032b41;
   animation: spin 1s linear infinite;
 }
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .container--sidebar--mobile-player {
+    height: calc(100vh - 180px) !important;
+  }
+}

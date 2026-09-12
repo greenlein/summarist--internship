@@ -1,6 +1,6 @@
 import "./Account.css";
 import Searchbar from "../components/Searchbar";
-import Sidebar from "../components/Sidebar";
+import { Sidebar } from "../components/Sidebar";
 import ForYouTab from "../components/ForYouTab";
 import { useLocation, useParams } from "react-router";
 import LibraryTab from "../components/LibraryTab";

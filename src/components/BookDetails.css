@@ -186,6 +186,10 @@
   }
 }
 @media (max-width: 768px) {
+  .inner__wrapper {
+    align-items: center;
+  }
+
   .inner-book__title {
     font-size: 24px;
   }

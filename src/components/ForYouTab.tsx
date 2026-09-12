@@ -101,7 +101,7 @@ export default function ForYouTab() {
                   subscriptionRequired={book.subscriptionRequired}
                 />
               ))
-            : new Array(5).fill(0).map(() => <SkeletonBook />)}
+            : new Array(5).fill(0).map((_, index) => <SkeletonBook key={index} />)}
         </div>
       </div>
 
@@ -122,7 +122,7 @@ export default function ForYouTab() {
                   subscriptionRequired={book.subscriptionRequired}
                 />
               ))
-            : new Array(5).fill(0).map(() => <SkeletonBook />)}
+            : new Array(5).fill(0).map((_, index) => <SkeletonBook key={index} />)}
         </div>
       </div>
     </>
